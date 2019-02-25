@@ -14,8 +14,9 @@ public class ClipboardHelper
     {
         if (m_systemCopyBufferProperty == null)
         {
+
             Type T = typeof(GUIUtility);
-            m_systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
+            m_systemCopyBufferProperty = T.GetProperty("systemCopyBuffer");// , BindingFlags.Static| BindingFlags.NonPublic//加上这个报错
             if (m_systemCopyBufferProperty == null)
                 throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
         }
@@ -40,70 +41,50 @@ public class ClipboardHelper
 /// <summary>
 /// 获得Hierarchy面板内选中物体的层级关系。并保存到剪贴板
 /// </summary>
-public class GetObjHierarchy
+public class GetObjHierarchy : ScriptableWizard
 {
-    [MenuItem("My/GetObjHierarchy/追溯1个父物体")]
-    static void GetObjHierarchy1()//往上追溯一个父物体
+    public int upperCount = 1;//追溯层级
+
+    [MenuItem("工具/获得物体的层级")]
+    static void GetHierarchy()
     {
-        getHierarchyPath(1);
+        ScriptableWizard.DisplayWizard("获得物体层级", typeof(GetObjHierarchy), "确定", "取消");
     }
 
 
-    [MenuItem("My/GetObjHierarchy/追溯2个父物体")]
-    static void GetObjHierarchy2()
+
+    private void OnWizardCreate()
     {
-        getHierarchyPath(2);
+        if (isValid)
+        {
+            getHierarchyPath(upperCount);
+        }
+
+    }
+
+    private void OnWizardOtherButton()
+    {
+        Close();
+    }
+
+    private void OnWizardUpdate()
+    {
+        helpString = "Hierarchy面板选中目标物体，获得其层级(点击确认后，层级会自动复制到剪贴板)";
+        if (upperCount < 1)
+        {
+            errorString = "upperCount必须大于等于1";
+            isValid = false;
+        }
+        else
+        {
+            errorString = "";
+            isValid = true;
+        }
     }
 
 
-    [MenuItem("My/GetObjHierarchy/追溯3个父物体")]
-    static void GetObjHierarchy3()
-    {
-        getHierarchyPath(3);
-    }
 
-    [MenuItem("My/GetObjHierarchy/追溯4个父物体")]
-    static void GetObjHierarchy4()
-    {
-        getHierarchyPath(4);
-    }
 
-    [MenuItem("My/GetObjHierarchy/追溯5个父物体")]
-    static void GetObjHierarchy5()
-    {
-        getHierarchyPath(5);
-    }
-
-    [MenuItem("My/GetObjHierarchy/追溯6个父物体")]
-    static void GetObjHierarchy6()
-    {
-        getHierarchyPath(6);
-    }
-    [MenuItem("My/GetObjHierarchy/追溯7个父物体")]
-    static void GetObjHierarchy7()
-    {
-        getHierarchyPath(7);
-    }
-    [MenuItem("My/GetObjHierarchy/追溯8个父物体")]
-    static void GetObjHierarchy8()
-    {
-        getHierarchyPath(8);
-    }
-    [MenuItem("Custom/GetObjHierarchy/追溯9个父物体")]
-    static void GetObjHierarchy9()
-    {
-        getHierarchyPath(9);
-    }
-    [MenuItem("My/GetObjHierarchy/追溯10个父物体")]
-    static void GetObjHierarchy10()
-    {
-        getHierarchyPath(10);
-    }
-    [MenuItem("My/GetObjHierarchy/追溯11个父物体")]
-    static void GetObjHierarchy11()
-    {
-        getHierarchyPath(11);
-    }
 
 
     static void getHierarchyPath(int parentCount)
@@ -119,7 +100,7 @@ public class GetObjHierarchy
         for (int i = 0; i < parentCount; i++)
         {
             var parent = selectObj.transform.parent;
-           
+
             if (parent == null)
             {
                 Debug.LogError("父物体数量不匹配");
@@ -128,7 +109,7 @@ public class GetObjHierarchy
             else
             {
                 selectObj = parent.gameObject;
-                path =selectObj.name + "/" + path;
+                path = selectObj.name + "/" + path;
             }
         }
 
