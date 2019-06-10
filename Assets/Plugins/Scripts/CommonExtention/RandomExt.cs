@@ -26,7 +26,8 @@ public class RandomExt
         }
         if (v1 == v2)
         {
-            Debug.LogError("error, generateValue input is not valid");
+            Debug.LogWarning("error, generateValue input is not valid, v1:" + v1 + ", v2:" + v2);
+            return v1;
         }
         int seed = DateTime.Now.Millisecond + randomTimes + lastValue;
         //Debug.Log("min:" + min + ",max:" + max + ",seed:" + seed);
@@ -48,7 +49,8 @@ public class RandomExt
     {
         int L;
         if (precision == 0)
-        {//获得v1,v2小数点后的位数
+        {
+            //获得v1,v2小数点后的位数
             string v1Str = v1.ToString();
             string v2Str = v2.ToString();
             int L1 = 0;

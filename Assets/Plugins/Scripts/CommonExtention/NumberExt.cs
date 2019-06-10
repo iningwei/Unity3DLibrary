@@ -4,7 +4,11 @@ using UnityEngine;
 
 public static class NumberExt
 {
-    public static string Format(this int value)
+    public static string FormatMK(this float value)
+    {
+        return FormatMK((int)value);
+    }
+    public static string FormatMK(this int value)
     {
         string formatStr;
         if (value < 1000)

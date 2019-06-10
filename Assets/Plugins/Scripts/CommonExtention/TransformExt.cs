@@ -9,6 +9,27 @@ using UnityEngine;
 /// </summary>
 public static class TransformExt
 {
+
+    public static void DestroyAllChilds(this Transform transform, bool destroyImmediate,Action beforeDestroyFunc=null)
+    {
+        int count = transform.childCount;
+        for (int i = count - 1; i >= 0; i--)
+        {
+            if (beforeDestroyFunc != null)
+            {
+                beforeDestroyFunc();
+            }
+
+            if (destroyImmediate)
+            {
+                GameObject.DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+            else
+            {
+                GameObject.Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+    }
     public static string Hierarchy(this Transform transform)
     {
         Transform parent = transform.parent;
