@@ -6,7 +6,7 @@ using System.IO;
 public class SearchRefrence : EditorWindow
 {
     /// <summary>
-    /// 查找引用
+    /// 查找指定资源被哪些预制件引用
     /// </summary>
     [MenuItem("Assets/SearchRefrence")]
     static void DoSearchRefrence()
